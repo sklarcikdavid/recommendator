@@ -2,11 +2,15 @@ import discord
 from discord.ext import commands
 import requests
 
-bot = commands.Bot(command_prefix='!', intents=discord.Intents.default())
+intents_fix = discord.Intents.default()
+intents_fix.message_content = True
 
-def ziskej_info_o_filmu(nazev_filmu, api_key):
+bot = commands.Bot(command_prefix='!', intents=intents_fix)
+
+def ziskej_info_o_filmu(nazev_filmu, api_klic):
     url: f'http://www.omdbapi.com/?t={nazev_filmu}&apikey={api_klic}&plot=short'
     response = requests.get(url)
+    
     data = response.json()
     if data['Response'] == 'True':
         return {
@@ -34,9 +38,9 @@ async def poslouchej(ctx, *, nazev_filmu):
         return
 
     await kanal.send(f'Získávám informace o filmu: {nazev_filmu}...')
-    api_key = '69,74,73,20,61,20,73,65,63,72,65,74'
+    api_klic = '69,74,73,20,61,20,73,65,63,72,65,74'
 
-    info = ziskej_info_o_filmu(nazev_filmu, api_key)
+    info = ziskej_info_o_filmu(nazev_filmu, api_klic)
     if info:
         embed = discord.Embed(
         title=f"{info['Název']} {info['Rok vydání']}",
